@@ -1,0 +1,41 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Har bir yig'ishda versiya raqami oshadi, shunda yangi APK eskisining ustiga o'rnatiladi
+def buildNumber = (System.getenv('GITHUB_RUN_NUMBER') ?: '1') as Integer
+
+android {
+    namespace 'uz.poligon.game'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'uz.poligon.game'
+        minSdk 24
+        targetSdk 34
+        versionCode buildNumber
+        versionName "1.${buildNumber}"
+    }
+
+    // Sinov kaliti reponing ichida turadi: har safar bir xil imzo chiqadi.
+    // Play Marketga chiqarish uchun bu kalit yaramaydi, alohida maxfiy kalit kerak bo'ladi.
+    signingConfigs {
+        debug {
+            storeFile rootProject.file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
